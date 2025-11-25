@@ -101,8 +101,8 @@
 
         .album-art-container {
             position: relative;
-            width: 240px;
-            height: 240px;
+            width: 160px; /* Reduced from 240px to 160px */
+            height: 160px; /* Reduced from 240px to 160px */
             margin-bottom: 20px;
         }
 
@@ -130,7 +130,7 @@
         }
 
         .album-art i {
-            font-size: 70px;
+            font-size: 50px; /* Adjusted for smaller container */
             color: rgba(255, 255, 255, 0.8);
             z-index: 1;
         }
@@ -817,19 +817,20 @@
                 
                 <div class="volume-control">
                     <i class="fas fa-volume-down"></i>
-                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="70">
+                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
                     <i class="fas fa-volume-up"></i>
                 </div>
                 
                 <div class="file-upload">
                     <div class="upload-options">
-                        <button class="upload-btn" id="upload-btn">
+                        <button class="upload-btn" id="upload-local-btn">
                             <i class="fas fa-plus"></i> Add Local Files
                         </button>
                         <button class="upload-btn secondary" id="icloud-btn">
                             <i class="fas fa-cloud"></i> Add from iCloud
                         </button>
                     </div>
+                    <input type="file" id="file-input" accept="audio/mp3, audio/mpeg, audio/wav, audio/ogg, audio/webm, audio/flac, audio/aac, audio/m4a, audio/x-m4a" multiple>
                     <div class="supported-formats">
                         Supported: <span>MP3, WAV, OGG, M4A, WebM, FLAC</span>
                     </div>
@@ -876,7 +877,7 @@
             const volumeSlider = document.getElementById('volume-slider');
             const playlistItems = document.getElementById('playlist-items');
             const fileInput = document.getElementById('file-input');
-            const uploadBtn = document.getElementById('upload-btn');
+            const uploadLocalBtn = document.getElementById('upload-local-btn');
             const icloudBtn = document.getElementById('icloud-btn');
             const clearBtn = document.getElementById('clear-btn');
             const songTitle = document.getElementById('song-title');
@@ -921,7 +922,13 @@
             repeatBtn.addEventListener('click', toggleRepeat);
             progressBar.addEventListener('click', setProgress);
             volumeSlider.addEventListener('input', setVolume);
-            uploadBtn.addEventListener('click', () => fileInput.click());
+            
+            // File upload events - FIXED: Now properly connected
+            uploadLocalBtn.addEventListener('click', () => {
+                fileInput.click();
+                showToast('Select audio files from your device', 'info');
+            });
+            
             fileInput.addEventListener('change', handleFileUpload);
             clearBtn.addEventListener('click', clearPlaylist);
             

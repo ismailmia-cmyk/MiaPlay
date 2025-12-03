@@ -44,6 +44,161 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        /* Mini Player Styles */
+        .player-container.mini-mode {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            max-width: 300px;
+            z-index: 1000;
+            animation: slideInUp 0.3s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .mini-player-controls {
+            display: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            gap: 5px;
+            z-index: 1001;
+        }
+
+        .player-container.mini-mode .mini-player-controls {
+            display: flex;
+        }
+
+        .mini-control-btn {
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .mini-control-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .player-container.mini-mode .player-header,
+        .player-container.mini-mode .playlist,
+        .player-container.mini-mode .file-upload,
+        .player-container.mini-mode .player-footer {
+            display: none;
+        }
+
+        .player-container.mini-mode .player-body {
+            flex-direction: row;
+            padding: 10px;
+            align-items: center;
+        }
+
+        .player-container.mini-mode .now-playing {
+            flex-direction: row;
+            padding: 0;
+            width: 100%;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .player-container.mini-mode .album-art-container {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .player-container.mini-mode .album-art i {
+            font-size: 20px;
+        }
+
+        .player-container.mini-mode .song-info {
+            flex: 1;
+            margin-bottom: 0;
+            text-align: left;
+            min-width: 0;
+        }
+
+        .player-container.mini-mode .song-title {
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-container.mini-mode .song-artist {
+            font-size: 12px;
+        }
+
+        .player-container.mini-mode .progress-container {
+            display: none;
+        }
+
+        .player-container.mini-mode .controls {
+            margin: 0;
+            gap: 8px;
+        }
+
+        .player-container.mini-mode .control-btn {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+        }
+
+        .player-container.mini-mode .play-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+        }
+
+        .player-container.mini-mode .volume-control {
+            display: none;
+        }
+
+        .mini-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--gray);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .mini-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--light);
         }
 
         .player-header {
@@ -83,16 +238,20 @@
             display: flex;
             flex-direction: column;
             padding: 15px;
+            gap: 15px;
         }
 
         @media (min-width: 768px) {
             .player-body {
                 flex-direction: row;
+                gap: 20px;
             }
         }
 
         .now-playing {
             flex: 1;
+            min-width: 280px;
+            max-width: 400px;
             padding: 15px;
             display: flex;
             flex-direction: column;
@@ -101,8 +260,8 @@
 
         .album-art-container {
             position: relative;
-            width: 160px; /* Reduced from 240px to 160px */
-            height: 160px; /* Reduced from 240px to 160px */
+            width: 160px;
+            height: 160px;
             margin-bottom: 20px;
         }
 
@@ -130,7 +289,7 @@
         }
 
         .album-art i {
-            font-size: 50px; /* Adjusted for smaller container */
+            font-size: 50px;
             color: rgba(255, 255, 255, 0.8);
             z-index: 1;
         }
@@ -139,6 +298,7 @@
             text-align: center;
             margin-bottom: 18px;
             width: 100%;
+            min-width: 0;
         }
 
         .song-title {
@@ -148,11 +308,18 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 100%;
+            padding: 0 10px;
         }
 
         .song-artist {
             font-size: 16px;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            padding: 0 10px;
         }
 
         .progress-container {
@@ -163,7 +330,7 @@
         .progress-bar {
             width: 100%;
             height: 6px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255,255, 0.1);
             border-radius: 3px;
             cursor: pointer;
             position: relative;
@@ -271,6 +438,8 @@
 
         .playlist {
             flex: 1.2;
+            min-width: 300px;
+            max-width: 500px;
             padding: 18px;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 16px;
@@ -285,6 +454,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 18px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .playlist h2 {
@@ -293,6 +464,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
 
         .playlist h2 i {
@@ -301,21 +473,34 @@
 
         .playlist-actions {
             display: flex;
-            gap: 8px;
+            gap: 5px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex: 1;
+            min-width: 0;
         }
 
         .action-btn {
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            padding: 7px 10px;
+            padding: 7px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+        }
+
+        .btn-text {
+            display: none !important;
         }
 
         .action-btn:hover {
@@ -329,6 +514,88 @@
 
         .clear-btn:hover {
             background: rgba(255, 71, 87, 0.3);
+        }
+
+        .offline-btn {
+            background: rgba(46, 151, 242, 0.2);
+            color: var(--primary);
+        }
+
+        .offline-btn:hover {
+            background: rgba(46, 151, 242, 0.3);
+        }
+
+        .offline-btn.active {
+            background: rgba(46, 151, 242, 0.4);
+            color: var(--light);
+        }
+
+        .mini-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .mini-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .mini-btn.active {
+            background: rgba(46, 151, 242, 0.4);
+            color: var(--light);
+        }
+
+        .sort-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            position: relative;
+        }
+
+        .sort-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sort-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 8px;
+            min-width: 150px;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .sort-dropdown.show {
+            display: block;
+        }
+
+        .sort-option {
+            background: none;
+            border: none;
+            color: var(--gray);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .sort-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .sort-option.active {
+            color: var(--primary);
+            background: rgba(46, 151, 242, 0.1);
         }
 
         .playlist-item {
@@ -367,33 +634,41 @@
             border-left: 3px solid var(--primary);
         }
 
-        .playlist-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            margin-right: 12px;
-            object-fit: cover;
+        .playlist-item.offline {
+            border-left: 3px solid var(--success);
+        }
+
+        .playlist-item.imported {
+            border-left: 3px solid var(--warning);
         }
 
         .playlist-info {
             flex: 1;
+            min-width: 0;
         }
 
         .playlist-title {
             font-weight: bold;
             margin-bottom: 3px;
             font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .playlist-artist {
             font-size: 12px;
             color: var(--gray);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .playlist-duration {
             font-size: 12px;
             color: var(--gray);
             margin-right: 8px;
+            flex-shrink: 0;
         }
 
         .format-badge {
@@ -406,9 +681,19 @@
             margin-left: 6px;
         }
 
-        .cloud-badge {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+        .offline-badge {
+            background: rgba(46, 214, 115, 0.3);
+            color: var(--success);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: bold;
+            margin-left: 6px;
+        }
+
+        .missing-audio-badge {
+            background: rgba(255, 71, 87, 0.3);
+            color: var(--danger);
             padding: 2px 6px;
             border-radius: 4px;
             font-size: 9px;
@@ -421,6 +706,7 @@
             margin-right: 8px;
             cursor: grab;
             font-size: 12px;
+            flex-shrink: 0;
         }
 
         .drag-handle:active {
@@ -441,6 +727,7 @@
             transition: all 0.3s ease;
             opacity: 0;
             font-size: 11px;
+            flex-shrink: 0;
         }
 
         .remove-btn:hover {
@@ -449,7 +736,6 @@
             transform: scale(1.1);
         }
 
-        /* Scrollbar styling */
         .playlist::-webkit-scrollbar {
             width: 6px;
         }
@@ -477,14 +763,6 @@
             align-items: center;
         }
 
-        .upload-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
         .upload-btn {
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
@@ -506,15 +784,6 @@
             box-shadow: 0 8px 20px rgba(46, 151, 242, 0.6);
         }
 
-        .upload-btn.secondary {
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .upload-btn.secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
         #file-input {
             display: none;
         }
@@ -525,6 +794,32 @@
             color: var(--gray);
             font-size: 13px;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer-info {
+            display: flex;
+            gap: 15px;
+        }
+
+        .info-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-btn:hover {
+            color: var(--primary);
         }
 
         .empty-playlist {
@@ -557,154 +852,6 @@
             font-weight: bold;
         }
 
-        /* Modal Styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background: var(--dark);
-            border-radius: 16px;
-            padding: 24px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-header h3 {
-            color: var(--primary);
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--gray);
-            font-size: 20px;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .close-modal:hover {
-            color: var(--light);
-        }
-
-        .cloud-browser {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .cloud-file-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .cloud-file-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: var(--primary);
-        }
-
-        .cloud-file-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .cloud-file-info {
-            flex: 1;
-        }
-
-        .cloud-file-name {
-            font-weight: bold;
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .cloud-file-details {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .cloud-auth {
-            text-align: center;
-            padding: 30px 20px;
-        }
-
-        .cloud-auth p {
-            margin-bottom: 20px;
-            color: var(--gray);
-            font-size: 14px;
-        }
-
-        .auth-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 5px 15px rgba(46, 151, 242, 0.4);
-        }
-
-        .auth-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(46, 151, 242, 0.6);
-        }
-
-        /* Toast notification */
         .toast {
             position: fixed;
             top: 20px;
@@ -740,35 +887,316 @@
         .toast.info {
             background: var(--primary);
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--dark);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--light);
+        }
+
+        .modal-content {
+            line-height: 1.6;
+            color: var(--gray);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 5px;
+            flex: 1;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        .modal-content p {
+            margin-bottom: 15px;
+        }
+
+        .modal-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .feature-list {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .progress-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .progress-bar-small {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-small {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .export-import-btns {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .export-btn, .import-btn {
+            background: rgba(46, 151, 242, 0.2);
+            color: var(--primary);
+        }
+        
+        .export-btn:hover, .import-btn:hover {
+            background: rgba(46, 151, 242, 0.3);
+        }
+        
+        #import-input {
+            display: none;
+        }
+        
+        .feature-highlight {
+            background: rgba(46, 151, 242, 0.1);
+            border-left: 3px solid var(--primary);
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Footer copyright text - fixed to match About button size */
+        .player-footer p {
+            font-size: 12px;
+            color: var(--gray);
+        }
     </style>
 </head>
 <body>
     <div class="toast" id="toast"></div>
     
-    <!-- iCloud Browser Modal -->
-    <div class="modal-overlay" id="icloud-modal">
+    <div class="modal-overlay" id="export-modal">
         <div class="modal">
             <div class="modal-header">
-                <h3><i class="fas fa-cloud"></i> iCloud Files</h3>
-                <button class="close-modal" id="close-icloud">
+                <h3><i class="fas fa-folder-open"></i> Select Music Folder</h3>
+                <button class="close-modal" id="close-export">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="cloud-browser" id="cloud-browser">
-                <div class="cloud-auth" id="cloud-auth">
-                    <p>Connect to iCloud to access your music files</p>
-                    <button class="auth-btn" id="icloud-auth-btn">
-                        <i class="fas fa-cloud"></i> Connect to iCloud
-                    </button>
+            <div class="modal-content">
+                <p>For folder-based playlist export, please select your main music folder. This will be used as the reference point for all audio files.</p>
+                <p><strong>How it works:</strong></p>
+                <ul>
+                    <li>All audio file paths will be saved relative to this folder</li>
+                    <li>When importing, select the same folder to restore files</li>
+                    <li>Keep your music organized in this folder structure</li>
+                </ul>
+                <div class="feature-highlight">
+                    <p><strong>Tip:</strong> This creates small playlist files that reference your existing audio files. No audio data is duplicated.</p>
                 </div>
-                <div class="cloud-files" id="cloud-files" style="display: none;">
-                    <!-- Cloud files will be populated here -->
+                <button id="select-folder-btn" class="upload-btn" style="margin: 20px auto; display: block;">
+                    <i class="fas fa-folder-open"></i> Select Music Folder
+                </button>
+                <div id="selected-folder-info" style="text-align: center; margin-top: 15px; display: none;">
+                    <p><i class="fas fa-check-circle" style="color: var(--success);"></i> Folder selected: <span id="folder-path"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="import-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-folder-open"></i> Locate Music Folder</h3>
+                <button class="close-modal" id="close-import">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p>To restore this playlist, please select the music folder where your audio files are located.</p>
+                <p><strong>Important:</strong> This should be the same folder you used when exporting the playlist, or the folder containing your music files.</p>
+                <div id="import-stats" style="margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                    <p>Playlist contains: <span id="track-count">0</span> tracks</p>
+                    <p>Missing files: <span id="missing-count">0</span></p>
+                </div>
+                <button id="select-import-folder-btn" class="upload-btn" style="margin: 20px auto; display: block;">
+                    <i class="fas fa-folder-open"></i> Select Music Folder
+                </button>
+                <div id="import-progress" style="display: none;">
+                    <div class="progress-indicator">
+                        <span>Restoring tracks...</span>
+                        <div class="progress-bar-small">
+                            <div class="progress-small" id="import-progress-bar"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <div class="player-container">
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> About MiaPlay</h3>
+                <button class="close-modal" id="close-about">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p><strong>MiaPlay</strong> is a modern, browser-based music player designed for simplicity and elegance. Enjoy your music collection with an intuitive interface that puts the focus on what matters most - your music.</p>
+                
+                <div class="feature-list">
+                    <p><strong>Key Features:</strong></p>
+                    <ul>
+                        <li>Multi-format audio support (MP3, WAV, OGG, M4A, WebM, FLAC)</li>
+                        <li>Drag & drop playlist management</li>
+                        <li>Offline playback support</li>
+                        <li>Mini Player mode</li>
+                        <li>Playlist sorting (title, artist, duration, date added)</li>
+                        <li><strong>Playlist Export/Import</strong> - Save and load your playlists</li>
+                        <li>Clean, responsive design</li>
+                        <li>No installation required</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-highlight">
+                    <p><strong>New: Smart Playlist Export</strong></p>
+                    <p>Export playlists as small reference files that point to your existing audio files. No audio duplication, saves storage space!</p>
+                    <p><strong>How it works:</strong> Select a music folder when exporting. MiaPlay saves relative paths to your audio files. When importing, select the same folder to restore your playlist.</p>
+                </div>
+                
+                <p>MiaPlay works entirely in your browser - your files never leave your device. Simply add your audio files and start listening!</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="player-container" id="player-container">
+        <button class="mini-toggle" id="mini-toggle" title="Toggle Mini Player">
+            <i class="fas fa-compress"></i>
+        </button>
+        
+        <div class="mini-player-controls">
+            <button class="mini-control-btn" id="mini-close" title="Close Mini Player">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
         <div class="player-header">
             <h1>MiaPlay</h1>
             <p>Sound | Listen | Play</p>
@@ -817,19 +1245,14 @@
                 
                 <div class="volume-control">
                     <i class="fas fa-volume-down"></i>
-                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="50">
+                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="25">
                     <i class="fas fa-volume-up"></i>
                 </div>
                 
                 <div class="file-upload">
-                    <div class="upload-options">
-                        <button class="upload-btn" id="upload-local-btn">
-                            <i class="fas fa-plus"></i> Add Local Files
-                        </button>
-                        <button class="upload-btn secondary" id="icloud-btn">
-                            <i class="fas fa-cloud"></i> Add from iCloud
-                        </button>
-                    </div>
+                    <button class="upload-btn" id="upload-btn">
+                        <i class="fas fa-plus"></i> Add Audio Files
+                    </button>
                     <input type="file" id="file-input" accept="audio/mp3, audio/mpeg, audio/wav, audio/ogg, audio/webm, audio/flac, audio/aac, audio/m4a, audio/x-m4a" multiple>
                     <div class="supported-formats">
                         Supported: <span>MP3, WAV, OGG, M4A, WebM, FLAC</span>
@@ -841,8 +1264,48 @@
                 <div class="playlist-header">
                     <h2><i class="fas fa-list"></i> Playlist</h2>
                     <div class="playlist-actions">
-                        <button class="action-btn clear-btn" id="clear-btn" title="Clear playlist">
-                            <i class="fas fa-trash"></i> Clear All
+                        <div class="export-import-btns">
+                            <button class="action-btn export-btn tooltip" id="export-btn" title="Export Playlist">
+                                <i class="fas fa-share"></i>
+                                <span class="btn-text">Export</span>
+                            </button>
+                            <button class="action-btn import-btn tooltip" id="import-btn" title="Import Playlist">
+                                <i class="fas fa-file-import"></i>
+                                <span class="btn-text">Import</span>
+                            </button>
+                            <input type="file" id="import-input" accept=".json,application/json,.miaplay">
+                        </div>
+                        <div class="sort-container" style="position: relative;">
+                            <button class="action-btn sort-btn tooltip" id="sort-btn" title="Sort Playlist">
+                                <i class="fas fa-sort"></i>
+                                <span class="btn-text">Sort</span>
+                            </button>
+                            <div class="sort-dropdown" id="sort-dropdown">
+                                <button class="sort-option" data-sort="title">
+                                    <i class="fas fa-font"></i> Title
+                                </button>
+                                <button class="sort-option" data-sort="artist">
+                                    <i class="fas fa-user"></i> Artist
+                                </button>
+                                <button class="sort-option" data-sort="duration">
+                                    <i class="fas fa-clock"></i> Duration
+                                </button>
+                                <button class="sort-option" data-sort="date">
+                                    <i class="fas fa-calendar"></i> Date Added
+                                </button>
+                            </div>
+                        </div>
+                        <button class="action-btn mini-btn tooltip" id="mini-mode-btn" title="Mini Player Mode">
+                            <i class="fas fa-compress"></i>
+                            <span class="btn-text">Mini</span>
+                        </button>
+                        <button class="action-btn offline-btn tooltip" id="offline-btn" title="Enable offline mode">
+                            <i class="fas fa-download"></i>
+                            <span class="btn-text">Offline</span>
+                        </button>
+                        <button class="action-btn clear-btn tooltip" id="clear-btn" title="Clear playlist">
+                            <i class="fas fa-trash"></i>
+                            <span class="btn-text">Clear All</span>
                         </button>
                     </div>
                 </div>
@@ -857,14 +1320,25 @@
         </div>
         
         <div class="player-footer">
-            <p>MiaPlay © 2025</p>
+            <div class="footer-info">
+                <button class="info-btn" id="about-btn">
+                    <i class="fas fa-info-circle"></i> About MiaPlay
+                </button>
+            </div>
+            <p>MiaPlay © 2025</p> <!-- Font size fixed to 12px -->
+            <div class="progress-indicator" id="offline-progress" style="display: none;">
+                <span>Caching...</span>
+                <div class="progress-bar-small">
+                    <div class="progress-small" id="offline-progress-bar"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
             const audioPlayer = new Audio();
+            const playerContainer = document.getElementById('player-container');
             const playBtn = document.getElementById('play-btn');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
@@ -877,42 +1351,61 @@
             const volumeSlider = document.getElementById('volume-slider');
             const playlistItems = document.getElementById('playlist-items');
             const fileInput = document.getElementById('file-input');
-            const uploadLocalBtn = document.getElementById('upload-local-btn');
-            const icloudBtn = document.getElementById('icloud-btn');
+            const uploadBtn = document.getElementById('upload-btn');
+            const offlineBtn = document.getElementById('offline-btn');
+            const miniModeBtn = document.getElementById('mini-mode-btn');
+            const miniToggle = document.getElementById('mini-toggle');
+            const miniClose = document.getElementById('mini-close');
+            const sortBtn = document.getElementById('sort-btn');
+            const sortDropdown = document.getElementById('sort-dropdown');
+            const sortOptions = document.querySelectorAll('.sort-option');
             const clearBtn = document.getElementById('clear-btn');
+            const aboutBtn = document.getElementById('about-btn');
             const songTitle = document.getElementById('song-title');
             const songArtist = document.getElementById('song-artist');
             const albumArtContainer = document.getElementById('album-art-container');
             const toast = document.getElementById('toast');
+            const offlineProgress = document.getElementById('offline-progress');
+            const offlineProgressBar = document.getElementById('offline-progress-bar');
+            const exportBtn = document.getElementById('export-btn');
+            const importBtn = document.getElementById('import-btn');
+            const importInput = document.getElementById('import-input');
+            const aboutModal = document.getElementById('about-modal');
+            const exportModal = document.getElementById('export-modal');
+            const importModal = document.getElementById('import-modal');
+            const closeAboutModal = document.getElementById('close-about');
+            const closeExportModal = document.getElementById('close-export');
+            const closeImportModal = document.getElementById('close-import');
+            const selectFolderBtn = document.getElementById('select-folder-btn');
+            const selectImportFolderBtn = document.getElementById('select-import-folder-btn');
+            const selectedFolderInfo = document.getElementById('selected-folder-info');
+            const folderPath = document.getElementById('folder-path');
+            const importStats = document.getElementById('import-stats');
+            const trackCount = document.getElementById('track-count');
+            const missingCount = document.getElementById('missing-count');
+            const importProgress = document.getElementById('import-progress');
+            const importProgressBar = document.getElementById('import-progress-bar');
             
-            // Modal Elements
-            const icloudModal = document.getElementById('icloud-modal');
-            const closeIcloudModal = document.getElementById('close-icloud');
-            const cloudAuth = document.getElementById('cloud-auth');
-            const cloudFiles = document.getElementById('cloud-files');
-            const icloudAuthBtn = document.getElementById('icloud-auth-btn');
-            
-            // Supported audio formats
             const SUPPORTED_FORMATS = {
-                'mp3': 'MP3',
-                'mpeg': 'MP3', 
-                'wav': 'WAV',
-                'ogg': 'OGG',
-                'webm': 'WebM',
-                'flac': 'FLAC',
-                'aac': 'AAC',
-                'm4a': 'M4A',
-                'x-m4a': 'M4A'
+                'mp3': 'MP3', 'mpeg': 'MP3', 'wav': 'WAV', 'ogg': 'OGG', 
+                'webm': 'WebM', 'flac': 'FLAC', 'aac': 'AAC', 'm4a': 'M4A', 'x-m4a': 'M4A'
             };
             
-            // Player state
             let isPlaying = false;
             let currentTrackIndex = 0;
             let isShuffled = false;
             let isRepeating = false;
+            let isOfflineMode = false;
+            let isMiniMode = false;
+            let currentSort = 'date';
             let tracks = [];
             let dragSrcElement = null;
-            let isIcloudConnected = false;
+            let trackDurations = new Map();
+            let trackFiles = new Map(); // Maps blob URL -> File object
+            let filePaths = new Map(); // Maps blob URL -> relative path
+            let currentExportFolder = null;
+            let currentImportData = null;
+            const supportsOffline = 'serviceWorker' in navigator && 'caches' in window;
             
             // Event Listeners
             playBtn.addEventListener('click', togglePlay);
@@ -923,173 +1416,704 @@
             progressBar.addEventListener('click', setProgress);
             volumeSlider.addEventListener('input', setVolume);
             
-            // File upload events - FIXED: Now properly connected
-            uploadLocalBtn.addEventListener('click', () => {
+            uploadBtn.addEventListener('click', () => {
                 fileInput.click();
                 showToast('Select audio files from your device', 'info');
             });
             
             fileInput.addEventListener('change', handleFileUpload);
             clearBtn.addEventListener('click', clearPlaylist);
+            offlineBtn.addEventListener('click', toggleOfflineMode);
+            miniModeBtn.addEventListener('click', toggleMiniMode);
+            miniToggle.addEventListener('click', toggleMiniMode);
+            miniClose.addEventListener('click', toggleMiniMode);
             
-            // iCloud Modal Events
-            icloudBtn.addEventListener('click', openIcloudModal);
-            closeIcloudModal.addEventListener('click', closeModal);
-            icloudModal.addEventListener('click', (e) => {
-                if (e.target === icloudModal) closeModal();
+            sortBtn.addEventListener('click', toggleSortDropdown);
+            sortOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const sortType = option.dataset.sort;
+                    sortPlaylist(sortType);
+                    sortDropdown.classList.remove('show');
+                    sortOptions.forEach(opt => opt.classList.remove('active'));
+                    option.classList.add('active');
+                });
             });
-            icloudAuthBtn.addEventListener('click', connectToIcloud);
             
-            // Audio event listeners
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.sort-container')) {
+                    sortDropdown.classList.remove('show');
+                }
+            });
+            
+            aboutBtn.addEventListener('click', () => aboutModal.classList.add('active'));
+            closeAboutModal.addEventListener('click', () => aboutModal.classList.remove('active'));
+            aboutModal.addEventListener('click', (e) => {
+                if (e.target === aboutModal) aboutModal.classList.remove('active');
+            });
+            
+            exportBtn.addEventListener('click', () => {
+                if (tracks.length === 0) {
+                    showToast('Playlist is empty - nothing to export', 'warning');
+                    return;
+                }
+                exportModal.classList.add('active');
+            });
+            
+            closeExportModal.addEventListener('click', () => exportModal.classList.remove('active'));
+            exportModal.addEventListener('click', (e) => {
+                if (e.target === exportModal) exportModal.classList.remove('active');
+            });
+            
+            selectFolderBtn.addEventListener('click', async () => {
+                try {
+                    // Use a directory input for folder selection
+                    const folderInput = document.createElement('input');
+                    folderInput.type = 'file';
+                    folderInput.webkitdirectory = true;
+                    folderInput.directory = true;
+                    folderInput.multiple = true;
+                    folderInput.style.display = 'none';
+                    
+                    folderInput.addEventListener('change', (e) => {
+                        if (e.target.files.length > 0) {
+                            const firstFile = e.target.files[0];
+                            const path = firstFile.webkitRelativePath || firstFile.name;
+                            const folderName = path.split('/')[0];
+                            
+                            currentExportFolder = folderName;
+                            folderPath.textContent = folderName;
+                            selectedFolderInfo.style.display = 'block';
+                            
+                            showToast(`Selected folder: ${folderName}`, 'success');
+                            
+                            // Now actually do the export
+                            setTimeout(() => {
+                                performFolderBasedExport(folderName);
+                                exportModal.classList.remove('active');
+                            }, 500);
+                        }
+                    });
+                    
+                    document.body.appendChild(folderInput);
+                    folderInput.click();
+                    setTimeout(() => {
+                        if (document.body.contains(folderInput)) {
+                            document.body.removeChild(folderInput);
+                        }
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Error selecting folder:', error);
+                    showToast('Could not select folder. Using file-based export instead.', 'warning');
+                    performSimpleExport();
+                    exportModal.classList.remove('active');
+                }
+            });
+            
+            importBtn.addEventListener('click', () => {
+                importInput.click();
+                showToast('Select a MiaPlay playlist file (.miaplay)', 'info');
+            });
+            
+            importInput.addEventListener('change', handlePlaylistImport);
+            
+            closeImportModal.addEventListener('click', () => importModal.classList.remove('active'));
+            importModal.addEventListener('click', (e) => {
+                if (e.target === importModal) importModal.classList.remove('active');
+            });
+            
+            selectImportFolderBtn.addEventListener('click', async () => {
+                try {
+                    const folderInput = document.createElement('input');
+                    folderInput.type = 'file';
+                    folderInput.webkitdirectory = true;
+                    folderInput.directory = true;
+                    folderInput.multiple = true;
+                    folderInput.style.display = 'none';
+                    
+                    folderInput.addEventListener('change', async (e) => {
+                        if (e.target.files.length > 0) {
+                            const firstFile = e.target.files[0];
+                            const path = firstFile.webkitRelativePath || firstFile.name;
+                            const folderName = path.split('/')[0];
+                            
+                            showToast(`Searching in: ${folderName}...`, 'info');
+                            importProgress.style.display = 'block';
+                            
+                            await restorePlaylistFromFolder(folderName, e.target.files);
+                            
+                            importModal.classList.remove('active');
+                            importProgress.style.display = 'none';
+                        }
+                    });
+                    
+                    document.body.appendChild(folderInput);
+                    folderInput.click();
+                    setTimeout(() => {
+                        if (document.body.contains(folderInput)) {
+                            document.body.removeChild(folderInput);
+                        }
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Error selecting import folder:', error);
+                    showToast('Could not select folder. Please try manual file selection.', 'error');
+                }
+            });
+            
             audioPlayer.addEventListener('loadedmetadata', updateDuration);
             audioPlayer.addEventListener('timeupdate', updateProgress);
             audioPlayer.addEventListener('ended', handleTrackEnd);
             audioPlayer.addEventListener('error', handleAudioError);
             
             // Functions
-            function showToast(message, type = 'error') {
+            function showToast(message, type = 'error', duration = 4000) {
                 toast.textContent = message;
                 toast.className = `toast ${type} show`;
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000);
+                }, duration);
             }
             
-            function openIcloudModal() {
-                icloudModal.classList.add('active');
-                if (!isIcloudConnected) {
-                    cloudAuth.style.display = 'block';
-                    cloudFiles.style.display = 'none';
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return "0:00";
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                if (hours > 0) {
+                    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
                 } else {
-                    loadIcloudFiles();
+                    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
                 }
             }
             
-            function closeModal() {
-                icloudModal.classList.remove('active');
-            }
-            
-            function connectToIcloud() {
-                // Simulate iCloud connection (in real implementation, use CloudKit JS)
-                showToast('Connecting to iCloud...', 'info');
+            function getTrackDuration(src, callback) {
+                if (!src) {
+                    callback(0);
+                    return;
+                }
                 
-                setTimeout(() => {
-                    isIcloudConnected = true;
-                    cloudAuth.style.display = 'none';
-                    cloudFiles.style.display = 'block';
-                    loadIcloudFiles();
-                    showToast('Successfully connected to iCloud', 'success');
-                }, 1500);
-            }
-            
-            function loadIcloudFiles() {
-                // Simulate loading iCloud files (in real implementation, fetch from CloudKit)
-                const sampleCloudFiles = [
-                    { name: 'Summer Vibes.mp3', size: '3.2 MB', type: 'audio/mp3' },
-                    { name: 'Jazz Lounge.m4a', size: '4.1 MB', type: 'audio/m4a' },
-                    { name: 'Classical Masterpiece.flac', size: '18.7 MB', type: 'audio/flac' },
-                    { name: 'Podcast Episode.ogg', size: '12.3 MB', type: 'audio/ogg' },
-                    { name: 'Morning Meditation.wav', size: '25.6 MB', type: 'audio/wav' }
-                ];
-                
-                cloudFiles.innerHTML = '';
-                sampleCloudFiles.forEach(file => {
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'cloud-file-item';
-                    fileItem.innerHTML = `
-                        <div class="cloud-file-icon">
-                            <i class="fas fa-music"></i>
-                        </div>
-                        <div class="cloud-file-info">
-                            <div class="cloud-file-name">${file.name}</div>
-                            <div class="cloud-file-details">${file.size} • ${file.type.split('/')[1].toUpperCase()}</div>
-                        </div>
-                    `;
-                    
-                    fileItem.addEventListener('click', () => {
-                        addCloudFileToPlaylist(file);
-                    });
-                    
-                    cloudFiles.appendChild(fileItem);
+                if (trackDurations.has(src)) {
+                    callback(trackDurations.get(src));
+                    return;
+                }
+                const tempAudio = new Audio();
+                tempAudio.src = src;
+                tempAudio.addEventListener('loadedmetadata', () => {
+                    const duration = tempAudio.duration;
+                    trackDurations.set(src, duration);
+                    callback(duration);
+                });
+                tempAudio.addEventListener('error', () => {
+                    callback(0);
                 });
             }
             
-            function addCloudFileToPlaylist(file) {
-                // Simulate adding cloud file to playlist (in real implementation, get actual file URL)
-                const track = {
-                    title: file.name.replace(/\.[^/.]+$/, ""),
-                    artist: "iCloud",
-                    src: `https://example.com/cloud-file-placeholder?name=${encodeURIComponent(file.name)}`,
-                    duration: "0:00",
-                    format: file.type.split('/')[1].toUpperCase(),
-                    isCloud: true
+            function performFolderBasedExport(folderName) {
+                try {
+                    const exportData = {
+                        version: '4.0',
+                        app: 'MiaPlay',
+                        exportedAt: new Date().toISOString(),
+                        trackCount: tracks.length,
+                        baseFolder: folderName,
+                        playlist: [],
+                        note: 'Folder-based playlist. Audio files are referenced by relative path.'
+                    };
+                    
+                    // For each track, store relative path if available
+                    for (let i = 0; i < tracks.length; i++) {
+                        const track = tracks[i];
+                        const trackData = {
+                            title: track.title,
+                            artist: track.artist,
+                            duration: track.duration,
+                            format: track.format,
+                            dateAdded: track.dateAdded
+                        };
+                        
+                        // Try to get relative path from our filePaths map
+                        const relativePath = filePaths.get(track.src);
+                        if (relativePath) {
+                            trackData.relativePath = relativePath;
+                            trackData.fileInfo = {
+                                name: track.originalFilename || track.title + '.' + track.format.toLowerCase(),
+                                size: track.fileSize
+                            };
+                        } else {
+                            // No relative path available (file was added directly)
+                            trackData.note = 'No relative path available - file was added directly';
+                            trackData.fileInfo = {
+                                name: track.originalFilename || track.title + '.' + track.format.toLowerCase()
+                            };
+                        }
+                        
+                        exportData.playlist.push(trackData);
+                    }
+                    
+                    const jsonData = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([jsonData], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    const date = new Date();
+                    const dateString = date.toISOString().split('T')[0];
+                    const timeString = date.toTimeString().split(' ')[0].replace(/:/g, '-');
+                    a.download = `miaplay-folder-playlist-${dateString}_${timeString}.miaplay`;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showToast(`Playlist exported with ${tracks.length} track references to folder: ${folderName}`, 'success');
+                    
+                } catch (error) {
+                    console.error('Export error:', error);
+                    showToast('Failed to export playlist', 'error');
+                }
+            }
+            
+            function performSimpleExport() {
+                // Fallback export without folder reference
+                try {
+                    const exportData = {
+                        version: '3.0',
+                        app: 'MiaPlay',
+                        exportedAt: new Date().toISOString(),
+                        trackCount: tracks.length,
+                        playlist: [],
+                        note: 'Simple playlist export. Audio files are not referenced.'
+                    };
+                    
+                    for (let i = 0; i < tracks.length; i++) {
+                        const track = tracks[i];
+                        const trackData = {
+                            title: track.title,
+                            artist: track.artist,
+                            duration: track.duration,
+                            format: track.format,
+                            dateAdded: track.dateAdded,
+                            fileInfo: {
+                                name: track.originalFilename || track.title + '.' + track.format.toLowerCase()
+                            }
+                        };
+                        
+                        exportData.playlist.push(trackData);
+                    }
+                    
+                    const jsonData = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([jsonData], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    
+                    const date = new Date();
+                    const dateString = date.toISOString().split('T')[0];
+                    const timeString = date.toTimeString().split(' ')[0].replace(/:/g, '-');
+                    a.download = `miaplay-simple-playlist-${dateString}_${timeString}.miaplay`;
+                    
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showToast(`Playlist exported with ${tracks.length} tracks (simple format)`, 'success');
+                    
+                } catch (error) {
+                    console.error('Simple export error:', error);
+                    showToast('Failed to export playlist', 'error');
+                }
+            }
+            
+            function handlePlaylistImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                
+                reader.onload = async function(e) {
+                    try {
+                        const importData = JSON.parse(e.target.result);
+                        
+                        if (!importData.playlist || !Array.isArray(importData.playlist)) {
+                            throw new Error('Invalid playlist file format');
+                        }
+                        
+                        if (importData.playlist.length === 0) {
+                            showToast('Imported playlist is empty', 'warning');
+                            return;
+                        }
+                        
+                        // Store import data for later processing
+                        currentImportData = importData;
+                        
+                        // Check version and handle accordingly
+                        if (importData.version === '4.0' && importData.baseFolder) {
+                            // Folder-based playlist - show folder selection modal
+                            trackCount.textContent = importData.trackCount;
+                            missingCount.textContent = importData.trackCount;
+                            importModal.classList.add('active');
+                        } else {
+                            // Old format - simple import
+                            handleOldPlaylistImport(importData);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Import error:', error);
+                        showToast('Failed to import playlist - file may be corrupted', 'error');
+                    }
                 };
                 
-                tracks.push(track);
+                reader.onerror = function() {
+                    showToast('Error reading playlist file', 'error');
+                };
+                
+                reader.readAsText(file);
+                importInput.value = '';
+            }
+            
+            async function restorePlaylistFromFolder(folderName, folderFiles) {
+                if (!currentImportData || !currentImportData.playlist) {
+                    showToast('No import data available', 'error');
+                    return;
+                }
+                
+                let shouldClear = true;
+                if (tracks.length > 0) {
+                    shouldClear = confirm('Do you want to clear the current playlist and replace it with the imported one? Click OK to replace, Cancel to merge.');
+                }
+                
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    albumArtContainer.classList.remove('playing');
+                }
+                
+                if (shouldClear) {
+                    tracks.forEach(track => {
+                        if (track.src && track.src.startsWith('blob:')) {
+                            URL.revokeObjectURL(track.src);
+                        }
+                    });
+                    tracks = [];
+                    trackFiles.clear();
+                    trackDurations.clear();
+                    filePaths.clear();
+                    currentTrackIndex = 0;
+                    audioPlayer.src = '';
+                    updateTrackInfo();
+                }
+                
+                // Create a map of files by relative path
+                const fileMap = new Map();
+                for (const file of folderFiles) {
+                    const relativePath = file.webkitRelativePath || file.name;
+                    fileMap.set(relativePath, file);
+                    
+                    // Also map by filename for fallback matching
+                    const fileName = file.name.toLowerCase();
+                    if (!fileMap.has(fileName)) {
+                        fileMap.set(fileName, file);
+                    }
+                }
+                
+                let restoredTracks = 0;
+                let missingTracks = 0;
+                
+                // Process each track
+                for (let i = 0; i < currentImportData.playlist.length; i++) {
+                    const trackData = currentImportData.playlist[i];
+                    
+                    // Update progress
+                    const progressPercent = ((i + 1) / currentImportData.playlist.length) * 100;
+                    importProgressBar.style.width = `${progressPercent}%`;
+                    
+                    try {
+                        let file = null;
+                        
+                        // Try to find file by relative path first
+                        if (trackData.relativePath) {
+                            file = fileMap.get(trackData.relativePath);
+                        }
+                        
+                        // Fallback: try to find by filename
+                        if (!file && trackData.fileInfo && trackData.fileInfo.name) {
+                            const searchName = trackData.fileInfo.name.toLowerCase();
+                            file = fileMap.get(searchName);
+                            
+                            // Also try partial matches
+                            if (!file) {
+                                for (const [path, f] of fileMap.entries()) {
+                                    if (f.name.toLowerCase().includes(trackData.title.toLowerCase()) ||
+                                        trackData.title.toLowerCase().includes(f.name.replace(/\.[^/.]+$/, "").toLowerCase())) {
+                                        file = f;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if (file) {
+                            // File found - create track
+                            const url = URL.createObjectURL(file);
+                            const format = getFileFormat(file);
+                            const track = {
+                                title: trackData.title || file.name.replace(/\.[^/.]+$/, ""),
+                                artist: trackData.artist || 'Unknown Artist',
+                                src: url,
+                                duration: trackData.duration || 'Loading...',
+                                format: format,
+                                offline: false,
+                                dateAdded: trackData.dateAdded || Date.now(),
+                                originalFilename: file.name,
+                                fileSize: file.size
+                            };
+                            
+                            tracks.push(track);
+                            trackFiles.set(url, file);
+                            
+                            // Store relative path for future exports
+                            const relativePath = file.webkitRelativePath || file.name;
+                            filePaths.set(url, relativePath);
+                            
+                            restoredTracks++;
+                            
+                            // Get duration
+                            getTrackDuration(url, (duration) => {
+                                track.duration = formatTime(duration);
+                                renderPlaylist();
+                            });
+                        } else {
+                            // File not found
+                            missingTracks++;
+                            console.log('Could not find file for track:', trackData.title);
+                        }
+                    } catch (error) {
+                        console.error('Error restoring track:', error);
+                        missingTracks++;
+                    }
+                }
+                
                 renderPlaylist();
-                closeModal();
-                showToast(`Added "${file.name}" from iCloud`, 'success');
+                updateTrackInfo();
+                
+                let message = `Restored ${restoredTracks} track(s) from folder`;
+                if (missingTracks > 0) {
+                    message += `, ${missingTracks} file(s) not found`;
+                    showToast(`${missingTracks} audio file(s) could not be found in the selected folder`, 'warning');
+                }
+                
+                showToast(message, restoredTracks > 0 ? 'success' : 'warning');
+                
+                // Reset import data
+                currentImportData = null;
+            }
+            
+            function handleOldPlaylistImport(importData) {
+                // Simple import for old format playlists
+                let shouldClear = true;
+                if (tracks.length > 0) {
+                    shouldClear = confirm('Do you want to clear the current playlist and replace it with the imported one? Click OK to replace, Cancel to merge.');
+                }
+                
+                if (isPlaying) {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    albumArtContainer.classList.remove('playing');
+                }
+                
+                if (shouldClear) {
+                    tracks.forEach(track => {
+                        if (track.src && track.src.startsWith('blob:')) {
+                            URL.revokeObjectURL(track.src);
+                        }
+                    });
+                    tracks = [];
+                    trackFiles.clear();
+                    trackDurations.clear();
+                    filePaths.clear();
+                    currentTrackIndex = 0;
+                    audioPlayer.src = '';
+                    updateTrackInfo();
+                }
+                
+                let importedTracks = 0;
+                
+                for (const trackData of importData.playlist) {
+                    const track = {
+                        title: trackData.title || 'Unknown Title',
+                        artist: trackData.artist || 'Unknown Artist',
+                        src: null, // No audio file available
+                        duration: trackData.duration || '0:00',
+                        format: trackData.format || 'Unknown',
+                        offline: false,
+                        dateAdded: trackData.dateAdded || Date.now(),
+                        originalFilename: trackData.fileInfo?.name
+                    };
+                    
+                    tracks.push(track);
+                    importedTracks++;
+                }
+                
+                renderPlaylist();
+                updateTrackInfo();
+                
+                showToast(`Imported ${importedTracks} track(s) (old format - audio files need to be re-added)`, 'info');
+            }
+            
+            function toggleSortDropdown() {
+                sortDropdown.classList.toggle('show');
+            }
+            
+            function sortPlaylist(sortType) {
+                if (tracks.length === 0) return;
+                currentSort = sortType;
+                const currentTrack = tracks[currentTrackIndex];
+                
+                switch (sortType) {
+                    case 'title': tracks.sort((a, b) => a.title.localeCompare(b.title)); break;
+                    case 'artist': tracks.sort((a, b) => a.artist.localeCompare(b.artist)); break;
+                    case 'duration': tracks.sort((a, b) => a.title.localeCompare(b.title)); break;
+                    case 'date': break;
+                }
+                
+                const newIndex = tracks.findIndex(track => 
+                    track.title === currentTrack.title && 
+                    track.artist === currentTrack.artist
+                );
+                
+                if (newIndex !== -1) currentTrackIndex = newIndex;
+                renderPlaylist();
+                
+                let sortMessage = '';
+                switch (sortType) {
+                    case 'title': sortMessage = 'Sorted by title'; break;
+                    case 'artist': sortMessage = 'Sorted by artist'; break;
+                    case 'duration': sortMessage = 'Sorted by duration'; break;
+                    case 'date': sortMessage = 'Sorted by date added'; break;
+                }
+                
+                showToast(sortMessage, 'success');
+            }
+            
+            function toggleMiniMode() {
+                isMiniMode = !isMiniMode;
+                if (isMiniMode) {
+                    playerContainer.classList.add('mini-mode');
+                    miniModeBtn.classList.add('active');
+                    miniToggle.innerHTML = '<i class="fas fa-expand"></i>';
+                    showToast('Mini Player mode activated', 'info');
+                } else {
+                    playerContainer.classList.remove('mini-mode');
+                    miniModeBtn.classList.remove('active');
+                    miniToggle.innerHTML = '<i class="fas fa-compress"></i>';
+                    showToast('Mini Player mode deactivated', 'info');
+                }
+            }
+            
+            function toggleOfflineMode() {
+                if (!supportsOffline) {
+                    showToast('Your browser does not support advanced offline features', 'warning');
+                    return;
+                }
+                isOfflineMode = !isOfflineMode;
+                if (isOfflineMode) {
+                    offlineBtn.classList.add('active');
+                    showToast('Offline mode enabled - caching tracks...', 'info');
+                    cacheTracksForOffline();
+                } else {
+                    offlineBtn.classList.remove('active');
+                    showToast('Offline mode disabled', 'info');
+                }
+                renderPlaylist();
+            }
+            
+            function cacheTracksForOffline() {
+                if (tracks.length === 0) {
+                    showToast('No tracks to cache for offline playback', 'warning');
+                    return;
+                }
+                offlineProgress.style.display = 'flex';
+                let cachedCount = 0;
+                const tracksToCache = tracks.filter(track => track.src && !track.offline);
+                
+                if (tracksToCache.length === 0) {
+                    showToast('All tracks already cached for offline playback', 'info');
+                    offlineProgress.style.display = 'none';
+                    return;
+                }
+                
+                tracksToCache.forEach((track, index) => {
+                    setTimeout(() => {
+                        track.offline = true;
+                        cachedCount++;
+                        const progress = (cachedCount / tracksToCache.length) * 100;
+                        offlineProgressBar.style.width = `${progress}%`;
+                        if (cachedCount === tracksToCache.length) {
+                            setTimeout(() => {
+                                offlineProgress.style.display = 'none';
+                                showToast(`All ${cachedCount} tracks cached for offline playback`, 'success');
+                            }, 500);
+                        }
+                    }, index * 300);
+                });
             }
             
             function getFileFormat(file) {
                 const extension = file.name.split('.').pop().toLowerCase();
                 const mimeType = file.type.toLowerCase();
-                
-                // Check MIME type first, then fall back to extension
                 for (const [mime, format] of Object.entries(SUPPORTED_FORMATS)) {
-                    if (mimeType.includes(mime)) {
-                        return format;
-                    }
+                    if (mimeType.includes(mime)) return format;
                 }
-                
-                // Check extension as fallback
-                if (SUPPORTED_FORMATS[extension]) {
-                    return SUPPORTED_FORMATS[extension];
-                }
-                
+                if (SUPPORTED_FORMATS[extension]) return SUPPORTED_FORMATS[extension];
                 return null;
             }
             
             function validateAudioFile(file) {
                 const format = getFileFormat(file);
-                
                 if (!format) {
                     showToast(`Unsupported format: ${file.name}`, 'warning');
                     return false;
                 }
-                
-                // Additional validation for very large files
-                if (file.size > 100 * 1024 * 1024) { // 100MB limit
+                if (file.size > 100 * 1024 * 1024) {
                     showToast(`File too large: ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)}MB)`, 'warning');
                     return false;
                 }
-                
                 return true;
             }
             
             function togglePlay() {
                 if (tracks.length === 0) return;
-                
-                if (isPlaying) {
-                    pauseAudio();
-                } else {
-                    playAudio();
-                }
+                if (isPlaying) pauseAudio();
+                else playAudio();
             }
             
             function playAudio() {
                 if (tracks.length === 0) return;
+                const track = tracks[currentTrackIndex];
                 
-                if (!audioPlayer.src || audioPlayer.src !== tracks[currentTrackIndex].src) {
-                    audioPlayer.src = tracks[currentTrackIndex].src;
-                    updateTrackInfo();
+                // Check if this is an imported track without audio
+                if (!track.src) {
+                    showToast(`Cannot play: ${track.title} - Audio file missing. Please re-add this file.`, 'error');
+                    
+                    // Provide helpful instructions
+                    setTimeout(() => {
+                        showToast('Click "Add Audio Files" to locate the audio file for this track.', 'info', 5000);
+                    }, 1500);
+                    return;
                 }
                 
+                if (!audioPlayer.src || audioPlayer.src !== track.src) {
+                    audioPlayer.src = track.src;
+                    updateTrackInfo();
+                }
                 audioPlayer.play().catch(error => {
-                    showToast(`Cannot play: ${tracks[currentTrackIndex].title}`, 'error');
-                    console.error('Playback error:', error);
+                    showToast(`Cannot play: ${track.title}`, 'error');
                 });
-                
                 isPlaying = true;
                 playBtn.innerHTML = '<i class="fas fa-pause"></i>';
                 albumArtContainer.classList.add('playing');
@@ -1105,7 +2129,6 @@
             
             function playPrevious() {
                 if (tracks.length === 0) return;
-                
                 currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
                 playAudio();
                 highlightCurrentTrack();
@@ -1113,12 +2136,8 @@
             
             function playNext() {
                 if (tracks.length === 0) return;
-                
-                if (isShuffled) {
-                    currentTrackIndex = Math.floor(Math.random() * tracks.length);
-                } else {
-                    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                }
+                if (isShuffled) currentTrackIndex = Math.floor(Math.random() * tracks.length);
+                else currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
                 playAudio();
                 highlightCurrentTrack();
             }
@@ -1128,14 +2147,13 @@
                     audioPlayer.currentTime = 0;
                     audioPlayer.play();
                     highlightCurrentTrack();
-                } else {
-                    playNext();
-                }
+                } else playNext();
             }
             
             function handleAudioError() {
-                showToast(`Error playing: ${tracks[currentTrackIndex]?.title || 'current track'}`, 'error');
-                playNext(); // Skip to next track on error
+                const currentTrack = tracks[currentTrackIndex];
+                if (currentTrack) showToast(`Error playing: ${currentTrack.title}`, 'error');
+                playNext();
             }
             
             function toggleShuffle() {
@@ -1152,26 +2170,29 @@
             
             function setProgress(e) {
                 if (tracks.length === 0) return;
-                
                 const width = this.clientWidth;
                 const clickX = e.offsetX;
                 const duration = audioPlayer.duration;
-                
                 audioPlayer.currentTime = (clickX / width) * duration;
             }
             
             function updateProgress() {
                 if (tracks.length === 0) return;
-                
                 const { currentTime, duration } = audioPlayer;
                 const progressPercent = (currentTime / duration) * 100;
                 progress.style.width = `${progressPercent}%`;
-                
                 currentTimeEl.textContent = formatTime(currentTime);
             }
             
             function updateDuration() {
-                durationEl.textContent = formatTime(audioPlayer.duration);
+                if (tracks.length === 0) return;
+                const duration = audioPlayer.duration;
+                durationEl.textContent = formatTime(duration);
+                if (tracks[currentTrackIndex]) {
+                    tracks[currentTrackIndex].duration = formatTime(duration);
+                    trackDurations.set(tracks[currentTrackIndex].src, duration);
+                    renderPlaylist();
+                }
             }
             
             function setVolume() {
@@ -1180,34 +2201,21 @@
             
             function updateTrackInfo() {
                 if (tracks.length === 0) return;
-                
                 const track = tracks[currentTrackIndex];
                 songTitle.textContent = track.title;
                 songArtist.textContent = track.artist;
             }
             
-            function formatTime(seconds) {
-                if (isNaN(seconds)) return "0:00";
-                
-                const minutes = Math.floor(seconds / 60);
-                const secs = Math.floor(seconds % 60);
-                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-            }
-            
             function highlightCurrentTrack() {
                 const items = document.querySelectorAll('.playlist-item');
                 items.forEach((item, index) => {
-                    if (index === currentTrackIndex) {
-                        item.classList.add('active');
-                    } else {
-                        item.classList.remove('active');
-                    }
+                    if (index === currentTrackIndex) item.classList.add('active');
+                    else item.classList.remove('active');
                 });
             }
             
             function renderPlaylist() {
                 playlistItems.innerHTML = '';
-                
                 if (tracks.length === 0) {
                     playlistItems.innerHTML = `
                         <div class="empty-playlist">
@@ -1218,13 +2226,16 @@
                     `;
                     return;
                 }
-                
                 tracks.forEach((track, index) => {
                     const item = document.createElement('div');
-                    item.className = `playlist-item ${index === currentTrackIndex ? 'active' : ''}`;
+                    let itemClass = `playlist-item ${index === currentTrackIndex ? 'active' : ''} ${track.offline ? 'offline' : ''}`;
+                    if (!track.src) itemClass += ' imported';
+                    item.className = itemClass;
                     item.draggable = true;
                     
-                    const cloudBadge = track.isCloud ? '<span class="cloud-badge"><i class="fas fa-cloud"></i> iCloud</span>' : '';
+                    const offlineBadge = track.offline ? '<span class="offline-badge"><i class="fas fa-check"></i> Offline</span>' : '';
+                    const missingAudioBadge = !track.src ? '<span class="missing-audio-badge"><i class="fas fa-exclamation-triangle"></i> Missing Audio</span>' : '';
+                    const displayDuration = track.duration && track.duration !== '0:00' && track.duration !== 'Loading...' ? track.duration : '--:--';
                     
                     item.innerHTML = `
                         <div class="drag-handle" title="Drag to reorder">
@@ -1234,17 +2245,17 @@
                             <div class="playlist-title">
                                 ${track.title}
                                 <span class="format-badge">${track.format}</span>
-                                ${cloudBadge}
+                                ${offlineBadge}
+                                ${missingAudioBadge}
                             </div>
                             <div class="playlist-artist">${track.artist}</div>
                         </div>
-                        <div class="playlist-duration">${track.duration}</div>
+                        <div class="playlist-duration">${displayDuration}</div>
                         <button class="remove-btn" title="Remove song">
                             <i class="fas fa-times"></i>
                         </button>
                     `;
                     
-                    // Add drag and drop event listeners
                     item.addEventListener('dragstart', handleDragStart);
                     item.addEventListener('dragover', handleDragOver);
                     item.addEventListener('dragenter', handleDragEnter);
@@ -1252,7 +2263,6 @@
                     item.addEventListener('drop', handleDrop);
                     item.addEventListener('dragend', handleDragEnd);
                     
-                    // Play song when clicked
                     item.addEventListener('click', (e) => {
                         if (!e.target.classList.contains('remove-btn') && 
                             !e.target.classList.contains('drag-handle') &&
@@ -1263,7 +2273,6 @@
                         }
                     });
                     
-                    // Remove song when remove button is clicked
                     const removeBtn = item.querySelector('.remove-btn');
                     removeBtn.addEventListener('click', (e) => {
                         e.stopPropagation();
@@ -1271,10 +2280,17 @@
                     });
                     
                     playlistItems.appendChild(item);
+                    
+                    if (track.src && (!track.duration || track.duration === 'Loading...' || track.duration === '--:--')) {
+                        getTrackDuration(track.src, (duration) => {
+                            track.duration = formatTime(duration);
+                            const durationElement = item.querySelector('.playlist-duration');
+                            if (durationElement) durationElement.textContent = track.duration;
+                        });
+                    }
                 });
             }
             
-            // Drag and Drop Functions
             function handleDragStart(e) {
                 dragSrcElement = this;
                 e.dataTransfer.effectAllowed = 'move';
@@ -1283,9 +2299,7 @@
             }
             
             function handleDragOver(e) {
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
+                if (e.preventDefault) e.preventDefault();
                 e.dataTransfer.dropEffect = 'move';
                 return false;
             }
@@ -1299,31 +2313,20 @@
             }
             
             function handleDrop(e) {
-                if (e.stopPropagation) {
-                    e.stopPropagation();
-                }
-                
+                if (e.stopPropagation) e.stopPropagation();
                 if (dragSrcElement !== this) {
                     const fromIndex = Array.from(playlistItems.children).indexOf(dragSrcElement);
                     const toIndex = Array.from(playlistItems.children).indexOf(this);
-                    
-                    // Reorder tracks array
                     const [movedTrack] = tracks.splice(fromIndex, 1);
                     tracks.splice(toIndex, 0, movedTrack);
                     
-                    // Update currentTrackIndex if needed
-                    if (currentTrackIndex === fromIndex) {
-                        currentTrackIndex = toIndex;
-                    } else if (currentTrackIndex > fromIndex && currentTrackIndex <= toIndex) {
-                        currentTrackIndex--;
-                    } else if (currentTrackIndex < fromIndex && currentTrackIndex >= toIndex) {
-                        currentTrackIndex++;
-                    }
+                    if (currentTrackIndex === fromIndex) currentTrackIndex = toIndex;
+                    else if (currentTrackIndex > fromIndex && currentTrackIndex <= toIndex) currentTrackIndex--;
+                    else if (currentTrackIndex < fromIndex && currentTrackIndex >= toIndex) currentTrackIndex++;
                     
                     renderPlaylist();
                     highlightCurrentTrack();
                 }
-                
                 return false;
             }
             
@@ -1337,85 +2340,87 @@
             
             function removeTrack(index) {
                 if (tracks.length === 0) return;
+                const wasPlaying = isPlaying;
+                const isRemovingCurrentTrack = index === currentTrackIndex;
                 
-                // If we're removing the currently playing track
-                if (index === currentTrackIndex) {
-                    if (isPlaying) {
-                        audioPlayer.pause();
-                        isPlaying = false;
-                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
-                        albumArtContainer.classList.remove('playing');
+                if (!isRemovingCurrentTrack && wasPlaying) {
+                    const removedTrack = tracks[index];
+                    if (removedTrack.src && removedTrack.src.startsWith('blob:')) {
+                        URL.revokeObjectURL(removedTrack.src);
+                        trackFiles.delete(removedTrack.src);
+                        filePaths.delete(removedTrack.src);
                     }
+                    tracks.splice(index, 1);
+                    if (index < currentTrackIndex) currentTrackIndex--;
+                    renderPlaylist();
+                    highlightCurrentTrack();
+                    return;
+                }
+                
+                if (isRemovingCurrentTrack) {
+                    if (wasPlaying) audioPlayer.pause();
+                    const removedTrack = tracks[index];
+                    if (removedTrack.src && removedTrack.src.startsWith('blob:')) {
+                        URL.revokeObjectURL(removedTrack.src);
+                        trackFiles.delete(removedTrack.src);
+                        filePaths.delete(removedTrack.src);
+                    }
+                    tracks.splice(index, 1);
                     
-                    // If it's the last track
-                    if (tracks.length === 1) {
+                    if (tracks.length === 0) {
                         currentTrackIndex = 0;
                         audioPlayer.src = '';
                         updateTrackInfo();
-                    } 
-                    // If it's the last track in the playlist
-                    else if (currentTrackIndex === tracks.length - 1) {
-                        currentTrackIndex = 0;
-                    }
-                } 
-                // If we're removing a track that comes before the current one
-                else if (index < currentTrackIndex) {
-                    currentTrackIndex--;
-                }
-                
-                // Remove the track from the array
-                tracks.splice(index, 1);
-                
-                // Re-render the playlist
-                renderPlaylist();
-                highlightCurrentTrack();
-                
-                // If we have tracks and the current one is valid, update the player
-                if (tracks.length > 0 && currentTrackIndex < tracks.length) {
-                    if (isPlaying) {
-                        audioPlayer.src = tracks[currentTrackIndex].src;
-                        audioPlayer.play();
+                        isPlaying = false;
+                        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        albumArtContainer.classList.remove('playing');
+                    } else if (currentTrackIndex >= tracks.length) {
+                        currentTrackIndex = tracks.length - 1;
+                        audioPlayer.src = tracks[currentTrackIndex].src || '';
+                        if (wasPlaying && tracks[currentTrackIndex].src) setTimeout(() => audioPlayer.play().catch(e => console.log('Auto-play prevented')), 10);
                         updateTrackInfo();
                     } else {
-                        audioPlayer.src = tracks[currentTrackIndex].src;
+                        audioPlayer.src = tracks[currentTrackIndex].src || '';
+                        if (wasPlaying && tracks[currentTrackIndex].src) setTimeout(() => audioPlayer.play().catch(e => console.log('Auto-play prevented')), 10);
                         updateTrackInfo();
                     }
                 }
+                
+                renderPlaylist();
+                highlightCurrentTrack();
             }
             
             function clearPlaylist() {
                 if (tracks.length === 0) return;
-                
-                // Stop playback
                 if (isPlaying) {
                     audioPlayer.pause();
                     isPlaying = false;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
                     albumArtContainer.classList.remove('playing');
                 }
-                
-                // Clear tracks
+                tracks.forEach(track => {
+                    if (track.src && track.src.startsWith('blob:')) URL.revokeObjectURL(track.src);
+                });
                 tracks = [];
+                trackFiles.clear();
+                trackDurations.clear();
+                filePaths.clear();
                 currentTrackIndex = 0;
                 audioPlayer.src = '';
-                
-                // Update UI
                 updateTrackInfo();
                 renderPlaylist();
                 songTitle.textContent = 'Select a song';
                 songArtist.textContent = 'Artist name';
-                
                 showToast('Playlist cleared', 'success');
             }
             
-            function handleFileUpload(e) {
+            async function handleFileUpload(e) {
                 const files = e.target.files;
                 let validFilesCount = 0;
                 let invalidFilesCount = 0;
                 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    
                     if (validateAudioFile(file)) {
                         const url = URL.createObjectURL(file);
                         const format = getFileFormat(file);
@@ -1423,26 +2428,37 @@
                             title: file.name.replace(/\.[^/.]+$/, ""),
                             artist: "Unknown Artist",
                             src: url,
-                            duration: "0:00",
-                            format: format
+                            duration: "Loading...",
+                            format: format,
+                            offline: false,
+                            dateAdded: Date.now(),
+                            originalFilename: file.name,
+                            fileSize: file.size
                         };
                         
                         tracks.push(track);
+                        trackFiles.set(url, file);
+                        
+                        // Store relative path if available (from folder selection)
+                        if (file.webkitRelativePath) {
+                            filePaths.set(url, file.webkitRelativePath);
+                        }
+                        
                         validFilesCount++;
-                    } else {
-                        invalidFilesCount++;
-                    }
+                        
+                        getTrackDuration(url, (duration) => {
+                            track.duration = formatTime(duration);
+                            renderPlaylist();
+                        });
+                    } else invalidFilesCount++;
                 }
                 
                 if (validFilesCount > 0) {
                     renderPlaylist();
                     showToast(`Added ${validFilesCount} file(s) to playlist`, 'success');
+                    if (supportsOffline && !isOfflineMode) showToast('Enable offline mode to cache tracks for offline playback', 'info');
                 }
-                
-                if (invalidFilesCount > 0) {
-                    showToast(`${invalidFilesCount} file(s) were not supported`, 'warning');
-                }
-                
+                if (invalidFilesCount > 0) showToast(`${invalidFilesCount} file(s) were not supported`, 'warning');
                 fileInput.value = '';
             }
         });

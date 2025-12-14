@@ -27,7 +27,7 @@
             --success: #2ed573;
             
             /* FONT CUSTOMIZATION VARIABLES */
-            --title-font: 'Roboto+Condensed', sans-serif; /* Default title font */
+            --title-font: 'Poppins', sans-serif; /* Default title font */
             --title-weight: 700; /* Font weight */
             --title-transform: none; /* text-transform */
             --title-letter-spacing: normal; /* letter-spacing */
@@ -53,160 +53,6 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
-        }
-
-        /* Mini Player Styles */
-        .player-container.mini-mode {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 300px;
-            max-width: 300px;
-            z-index: 1000;
-            animation: slideInUp 0.3s ease;
-        }
-
-        @keyframes slideInUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .mini-player-controls {
-            display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            gap: 5px;
-            z-index: 1001;
-        }
-
-        .player-container.mini-mode .mini-player-controls {
-            display: flex;
-        }
-
-        .mini-control-btn {
-            background: rgba(0, 0, 0, 0.7);
-            border: none;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .mini-control-btn:hover {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.1);
-        }
-
-        .player-container.mini-mode .player-header,
-        .player-container.mini-mode .playlist,
-        .player-container.mini-mode .file-upload,
-        .player-container.mini-mode .player-footer {
-            display: none;
-        }
-
-        .player-container.mini-mode .player-body {
-            flex-direction: row;
-            padding: 10px;
-            align-items: center;
-        }
-
-        .player-container.mini-mode .now-playing {
-            flex-direction: row;
-            padding: 0;
-            width: 100%;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .player-container.mini-mode .album-art-container {
-            width: 50px;
-            height: 50px;
-            margin-bottom: 0;
-            flex-shrink: 0;
-        }
-
-        .player-container.mini-mode .album-art i {
-            font-size: 20px;
-        }
-
-        .player-container.mini-mode .song-info {
-            flex: 1;
-            margin-bottom: 0;
-            text-align: left;
-            min-width: 0;
-        }
-
-        .player-container.mini-mode .song-title {
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-container.mini-mode .song-artist {
-            font-size: 12px;
-        }
-
-        .player-container.mini-mode .progress-container {
-            display: none;
-        }
-
-        .player-container.mini-mode .controls {
-            margin: 0;
-            gap: 8px;
-        }
-
-        .player-container.mini-mode .control-btn {
-            width: 35px;
-            height: 35px;
-            font-size: 14px;
-        }
-
-        .player-container.mini-mode .play-btn {
-            width: 40px;
-            height: 40px;
-            font-size: 16px;
-        }
-
-        .player-container.mini-mode .volume-control {
-            display: none;
-        }
-
-        .mini-toggle {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: var(--gray);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .mini-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--light);
         }
 
         .player-header {
@@ -538,20 +384,6 @@
         }
 
         .offline-btn.active {
-            background: rgba(46, 151, 242, 0.4);
-            color: var(--light);
-        }
-
-        .mini-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .mini-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .mini-btn.active {
             background: rgba(46, 151, 242, 0.4);
             color: var(--light);
         }
@@ -1327,7 +1159,6 @@
                         <li>Multi-format audio support (MP3, WAV, OGG, M4A, WebM, FLAC)</li>
                         <li>Drag & drop playlist management</li>
                         <li>Offline playback support</li>
-                        <li>Mini Player mode</li>
                         <li>Playlist sorting (title, artist, duration, date added)</li>
                         <li><strong>Playlist Export/Import</strong> - Save and load your playlists</li>
                         <li>Clean, responsive design</li>
@@ -1347,16 +1178,6 @@
     </div>
     
     <div class="player-container" id="player-container">
-        <button class="mini-toggle" id="mini-toggle" title="Toggle Mini Player">
-            <i class="fas fa-compress"></i>
-        </button>
-        
-        <div class="mini-player-controls">
-            <button class="mini-control-btn" id="mini-close" title="Close Mini Player">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
         <div class="player-header">
             <h1>MiaPlay</h1>
             <p>Sound | Listen | Play</p>
@@ -1456,10 +1277,6 @@
                                 </button>
                             </div>
                         </div>
-                        <button class="action-btn mini-btn tooltip" id="mini-mode-btn" title="Mini Player Mode">
-                            <i class="fas fa-compress"></i>
-                            <span class="btn-text">Mini</span>
-                        </button>
                         <button class="action-btn offline-btn tooltip" id="offline-btn" title="Enable offline mode">
                             <i class="fas fa-download"></i>
                             <span class="btn-text">Offline</span>
@@ -1522,9 +1339,6 @@
             const fileInput = document.getElementById('file-input');
             const uploadBtn = document.getElementById('upload-btn');
             const offlineBtn = document.getElementById('offline-btn');
-            const miniModeBtn = document.getElementById('mini-mode-btn');
-            const miniToggle = document.getElementById('mini-toggle');
-            const miniClose = document.getElementById('mini-close');
             const sortBtn = document.getElementById('sort-btn');
             const sortDropdown = document.getElementById('sort-dropdown');
             const sortOptions = document.querySelectorAll('.sort-option');
@@ -1574,7 +1388,6 @@
             let isShuffled = false;
             let isRepeating = false;
             let isOfflineMode = false;
-            let isMiniMode = false;
             let currentSort = 'date';
             let tracks = [];
             let dragSrcElement = null;
@@ -1771,6 +1584,15 @@
                     return;
                 }
                 
+                // Warn if adding many files
+                if (validFiles.length > 50) {
+                    const proceed = confirm(`You're adding ${validFiles.length} files. For best performance, MiaPlay shows only the first 100 tracks. Continue?`);
+                    if (!proceed) {
+                        fileInput.value = '';
+                        return;
+                    }
+                }
+                
                 // 1. INSTANT FEEDBACK: Show progress modal
                 uploadStartTime = Date.now();
                 uploadProgressModal.classList.add('active');
@@ -1897,9 +1719,6 @@
             
             clearBtn.addEventListener('click', clearPlaylist);
             offlineBtn.addEventListener('click', toggleOfflineMode);
-            miniModeBtn.addEventListener('click', toggleMiniMode);
-            miniToggle.addEventListener('click', toggleMiniMode);
-            miniClose.addEventListener('click', toggleMiniMode);
             
             sortBtn.addEventListener('click', toggleSortDropdown);
             sortOptions.forEach(option => {
@@ -2193,8 +2012,9 @@
                     return;
                 }
                 
-                // Virtual scrolling: Show only 50 tracks at a time
-                const visibleItems = tracks.slice(0, 50);
+                // Show only the first 100 tracks fully rendered
+                const maxVisibleTracks = 100;
+                const visibleItems = tracks.slice(0, maxVisibleTracks);
                 
                 visibleItems.forEach((track, index) => {
                     const item = document.createElement('div');
@@ -2237,7 +2057,7 @@
                         removeTrack(index);
                     });
                     
-                    // Drag and drop
+                    // Drag and drop (only enable for visible items)
                     item.addEventListener('dragstart', handleDragStart);
                     item.addEventListener('dragover', handleDragOver);
                     item.addEventListener('dragenter', handleDragEnter);
@@ -2248,15 +2068,28 @@
                     playlistItems.appendChild(item);
                 });
                 
-                // Show total count if we're not showing all items
-                if (tracks.length > visibleItems.length) {
-                    const countElement = document.createElement('div');
-                    countElement.style.textAlign = 'center';
-                    countElement.style.padding = '10px';
-                    countElement.style.color = 'var(--gray)';
-                    countElement.style.fontSize = '12px';
-                    countElement.textContent = `Showing ${visibleItems.length} of ${tracks.length} tracks`;
-                    playlistItems.appendChild(countElement);
+                // Show warning if playlist exceeds 100 tracks
+                if (tracks.length > maxVisibleTracks) {
+                    const warningElement = document.createElement('div');
+                    warningElement.style.textAlign = 'center';
+                    warningElement.style.padding = '10px';
+                    warningElement.style.marginTop = '10px';
+                    warningElement.style.background = 'rgba(255, 165, 2, 0.1)';
+                    warningElement.style.borderRadius = '8px';
+                    warningElement.style.border = '1px solid rgba(255, 165, 2, 0.3)';
+                    warningElement.style.color = 'var(--warning)';
+                    warningElement.style.fontSize = '12px';
+                    
+                    const hiddenCount = tracks.length - maxVisibleTracks;
+                    warningElement.innerHTML = `
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Showing first ${maxVisibleTracks} of ${tracks.length} tracks
+                        <div style="font-size: 11px; margin-top: 5px; color: var(--gray);">
+                            ${hiddenCount} tracks hidden for performance. Remove some tracks to see all.
+                        </div>
+                    `;
+                    
+                    playlistItems.appendChild(warningElement);
                 }
             }
             
@@ -2688,21 +2521,6 @@
             
             // ========== UTILITY FUNCTIONS ==========
             
-            function toggleMiniMode() {
-                isMiniMode = !isMiniMode;
-                if (isMiniMode) {
-                    playerContainer.classList.add('mini-mode');
-                    miniModeBtn.classList.add('active');
-                    miniToggle.innerHTML = '<i class="fas fa-expand"></i>';
-                    showToast('Mini Player mode activated', 'info');
-                } else {
-                    playerContainer.classList.remove('mini-mode');
-                    miniModeBtn.classList.remove('active');
-                    miniToggle.innerHTML = '<i class="fas fa-compress"></i>';
-                    showToast('Mini Player mode deactivated', 'info');
-                }
-            }
-            
             function toggleOfflineMode() {
                 if (!supportsOffline) {
                     showToast('Your browser does not support advanced offline features', 'warning');
@@ -2757,9 +2575,9 @@
                     const fromIndex = Array.from(playlistItems.children).indexOf(dragSrcElement);
                     const toIndex = Array.from(playlistItems.children).indexOf(this);
                     
-                    const hasCountElement = tracks.length > 50;
-                    const adjustedFromIndex = hasCountElement && fromIndex >= 50 ? fromIndex - 1 : fromIndex;
-                    const adjustedToIndex = hasCountElement && toIndex >= 50 ? toIndex - 1 : toIndex;
+                    const hasCountElement = tracks.length > 100;
+                    const adjustedFromIndex = hasCountElement && fromIndex >= 100 ? fromIndex - 1 : fromIndex;
+                    const adjustedToIndex = hasCountElement && toIndex >= 100 ? toIndex - 1 : toIndex;
                     
                     if (adjustedFromIndex >= 0 && adjustedToIndex >= 0) {
                         const [movedTrack] = tracks.splice(adjustedFromIndex, 1);

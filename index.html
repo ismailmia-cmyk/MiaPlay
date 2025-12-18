@@ -1061,6 +1061,16 @@
             font-size: 12px;
             color: var(--gray);
         }
+        
+        /* New: Stop button styling */
+        .stop-btn {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--danger);
+        }
+        
+        .stop-btn:hover {
+            background: rgba(255, 71, 87, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1216,6 +1226,9 @@
                     <button class="control-btn play-btn" id="play-btn" title="Play">
                         <i class="fas fa-play"></i>
                     </button>
+                    <button class="control-btn stop-btn" id="stop-btn" title="Stop (restart from beginning)">
+                        <i class="fas fa-stop"></i>
+                    </button>
                     <button class="control-btn" id="next-btn" title="Next">
                         <i class="fas fa-step-forward"></i>
                     </button>
@@ -1226,7 +1239,6 @@
                 
                 <div class="volume-control">
                     <i class="fas fa-volume-down"></i>
-                    <!-- VOLUME FIX: Changed from value="50" to value="25" -->
                     <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="25">
                     <i class="fas fa-volume-up"></i>
                 </div>
@@ -1323,6 +1335,7 @@
             const playBtn = document.getElementById('play-btn');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
+            const stopBtn = document.getElementById('stop-btn');
             const shuffleBtn = document.getElementById('shuffle-btn');
             const repeatBtn = document.getElementById('repeat-btn');
             const progressBar = document.getElementById('progress-bar');
@@ -1395,6 +1408,9 @@
             // Performance optimization
             let trackFiles = new Map(); // Maps track ID -> File object
             let activeBlobUrl = null;   // Currently active Blob URL
+            
+            // FIXED: Track which track is currently loaded in the audio player
+            let currentlyLoadedTrackId = null;
             
             // File paths for folder-based export
             let filePaths = new Map(); // Maps track ID -> relative path
@@ -1585,12 +1601,20 @@
                 }
                 
                 // Warn if adding many files
-                if (validFiles.length > 50) {
-                    const proceed = confirm(`You're adding ${validFiles.length} files. For best performance, MiaPlay shows only the first 100 tracks. Continue?`);
+                if (validFiles.length > 30) {
+                    const proceed = confirm(`You're adding ${validFiles.length} files. For best performance on mobile devices, MiaPlay is limited to 50 tracks total. Continue?`);
                     if (!proceed) {
                         fileInput.value = '';
                         return;
                     }
+                }
+                
+                // Check if adding these files would exceed the 50 track limit
+                if (tracks.length + validFiles.length > 50) {
+                    const excess = (tracks.length + validFiles.length) - 50;
+                    showToast(`Cannot add ${validFiles.length} files. Would exceed 50 track limit by ${excess} tracks. Remove some tracks first.`, 'warning');
+                    fileInput.value = '';
+                    return;
                 }
                 
                 // 1. INSTANT FEEDBACK: Show progress modal
@@ -1666,34 +1690,12 @@
                 return allTracks.length;
             }
             
-            // ========== TITLE FONT CUSTOMIZATION GUIDE ==========
-            
-            // To change the title font, modify these CSS variables in the :root selector:
-            /*
-            Example 1: Bold Montserrat
-            --title-font: 'Montserrat', sans-serif;
-            --title-weight: 800;
-            --title-transform: uppercase;
-            --title-letter-spacing: 1px;
-            
-            Example 2: Roboto Condensed
-            --title-font: 'Roboto Condensed', sans-serif;
-            --title-weight: 700;
-            --title-transform: none;
-            --title-letter-spacing: 0.5px;
-            
-            Example 3: Bebas Neue (all caps)
-            --title-font: 'Bebas Neue', sans-serif;
-            --title-weight: 400;
-            --title-transform: uppercase;
-            --title-letter-spacing: 2px;
-            */
-            
             // ========== EVENT LISTENERS ==========
             
             playBtn.addEventListener('click', togglePlay);
             prevBtn.addEventListener('click', playPrevious);
             nextBtn.addEventListener('click', playNext);
+            stopBtn.addEventListener('click', stopAudio);
             shuffleBtn.addEventListener('click', toggleShuffle);
             repeatBtn.addEventListener('click', toggleRepeat);
             progressBar.addEventListener('click', setProgress);
@@ -1860,28 +1862,42 @@
             
             function togglePlay() {
                 if (tracks.length === 0) return;
-                if (isPlaying) pauseAudio();
-                else playAudio();
+                
+                if (isPlaying) {
+                    // Pause the audio (will resume from same position when play is clicked again)
+                    pauseAudio();
+                } else {
+                    // Play or resume the audio
+                    playAudio();
+                }
             }
             
             function playAudio() {
                 if (tracks.length === 0) return;
                 const track = tracks[currentTrackIndex];
                 
-                const audioSource = getAudioSource(track.id);
-                if (!audioSource) {
-                    showToast(`Cannot play: ${track.title} - Audio file missing or inaccessible`, 'error');
-                    return;
-                }
+                // FIXED: Check if we need to load a new track
+                // We need to load a new track if:
+                // 1. No track is currently loaded (currentlyLoadedTrackId is null), OR
+                // 2. A different track is loaded than the one we want to play
+                const needsNewTrack = currentlyLoadedTrackId !== track.id;
                 
-                if (!audioPlayer.src || audioPlayer.src !== audioSource) {
+                if (needsNewTrack) {
+                    const audioSource = getAudioSource(track.id);
+                    if (!audioSource) {
+                        showToast(`Cannot play: ${track.title} - Audio file missing or inaccessible`, 'error');
+                        return;
+                    }
+                    
                     audioPlayer.src = audioSource;
+                    currentlyLoadedTrackId = track.id;
                     updateTrackInfo();
                 }
                 
                 audioPlayer.play().then(() => {
                     isPlaying = true;
                     playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playBtn.title = "Pause";
                     albumArtContainer.classList.add('playing');
                     highlightCurrentTrack();
                 }).catch(error => {
@@ -1893,22 +1909,101 @@
                 audioPlayer.pause();
                 isPlaying = false;
                 playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.title = "Play";
                 albumArtContainer.classList.remove('playing');
+            }
+            
+            function stopAudio() {
+                // Stop completely - reset to beginning
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+                isPlaying = false;
+                currentlyLoadedTrackId = null; // Reset the loaded track ID
+                playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                playBtn.title = "Play";
+                albumArtContainer.classList.remove('playing');
+                updateProgress(); // Update progress bar to show 0:00
+                showToast('Playback stopped', 'info');
             }
             
             function playPrevious() {
                 if (tracks.length === 0) return;
+                
+                // Store the current time before changing tracks
+                const wasPlaying = isPlaying;
+                
+                // Change track
                 currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
-                playAudio();
-                highlightCurrentTrack();
+                
+                // Load and play new track
+                const track = tracks[currentTrackIndex];
+                const audioSource = getAudioSource(track.id);
+                if (!audioSource) {
+                    showToast(`Cannot play: ${track.title} - Audio file missing or inaccessible`, 'error');
+                    return;
+                }
+                
+                audioPlayer.src = audioSource;
+                currentlyLoadedTrackId = track.id; // Track the loaded track
+                updateTrackInfo();
+                
+                if (wasPlaying) {
+                    audioPlayer.play().then(() => {
+                        isPlaying = true;
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        playBtn.title = "Pause";
+                        albumArtContainer.classList.add('playing');
+                        highlightCurrentTrack();
+                    }).catch(error => {
+                        showToast(`Cannot play: ${track.title}`, 'error');
+                    });
+                } else {
+                    // Just update UI without playing
+                    highlightCurrentTrack();
+                    updateTrackInfo();
+                }
             }
             
             function playNext() {
                 if (tracks.length === 0) return;
-                if (isShuffled) currentTrackIndex = Math.floor(Math.random() * tracks.length);
-                else currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-                playAudio();
-                highlightCurrentTrack();
+                
+                // Store the current time before changing tracks
+                const wasPlaying = isPlaying;
+                
+                // Change track
+                if (isShuffled) {
+                    currentTrackIndex = Math.floor(Math.random() * tracks.length);
+                } else {
+                    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+                }
+                
+                // Load and play new track
+                const track = tracks[currentTrackIndex];
+                const audioSource = getAudioSource(track.id);
+                if (!audioSource) {
+                    showToast(`Cannot play: ${track.title} - Audio file missing or inaccessible`, 'error');
+                    return;
+                }
+                
+                audioPlayer.src = audioSource;
+                currentlyLoadedTrackId = track.id; // Track the loaded track
+                updateTrackInfo();
+                
+                if (wasPlaying) {
+                    audioPlayer.play().then(() => {
+                        isPlaying = true;
+                        playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                        playBtn.title = "Pause";
+                        albumArtContainer.classList.add('playing');
+                        highlightCurrentTrack();
+                    }).catch(error => {
+                        showToast(`Cannot play: ${track.title}`, 'error');
+                    });
+                } else {
+                    // Just update UI without playing
+                    highlightCurrentTrack();
+                    updateTrackInfo();
+                }
             }
             
             function handleTrackEnd() {
@@ -1916,7 +2011,9 @@
                     audioPlayer.currentTime = 0;
                     audioPlayer.play();
                     highlightCurrentTrack();
-                } else playNext();
+                } else {
+                    playNext();
+                }
             }
             
             function handleAudioError() {
@@ -2012,8 +2109,8 @@
                     return;
                 }
                 
-                // Show only the first 100 tracks fully rendered
-                const maxVisibleTracks = 100;
+                // Show only the first 50 tracks fully rendered (optimized for mobile)
+                const maxVisibleTracks = 50;
                 const visibleItems = tracks.slice(0, maxVisibleTracks);
                 
                 visibleItems.forEach((track, index) => {
@@ -2045,9 +2142,40 @@
                         if (!e.target.classList.contains('remove-btn') && 
                             !e.target.classList.contains('drag-handle') &&
                             !e.target.parentElement.classList.contains('drag-handle')) {
+                            
+                            // Store the current time before changing tracks
+                            const wasPlaying = isPlaying;
+                            
+                            // Change track
                             currentTrackIndex = index;
-                            playAudio();
-                            highlightCurrentTrack();
+                            
+                            // Load and play new track
+                            const track = tracks[currentTrackIndex];
+                            const audioSource = getAudioSource(track.id);
+                            if (!audioSource) {
+                                showToast(`Cannot play: ${track.title} - Audio file missing or inaccessible`, 'error');
+                                return;
+                            }
+                            
+                            audioPlayer.src = audioSource;
+                            currentlyLoadedTrackId = track.id; // Track the loaded track
+                            updateTrackInfo();
+                            
+                            if (wasPlaying) {
+                                audioPlayer.play().then(() => {
+                                    isPlaying = true;
+                                    playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                                    playBtn.title = "Pause";
+                                    albumArtContainer.classList.add('playing');
+                                    highlightCurrentTrack();
+                                }).catch(error => {
+                                    showToast(`Cannot play: ${track.title}`, 'error');
+                                });
+                            } else {
+                                // Just update UI without playing
+                                highlightCurrentTrack();
+                                updateTrackInfo();
+                            }
                         }
                     });
                     
@@ -2068,8 +2196,8 @@
                     playlistItems.appendChild(item);
                 });
                 
-                // Show warning if playlist exceeds 100 tracks
-                if (tracks.length > maxVisibleTracks) {
+                // Show warning if playlist is at or exceeds 50 tracks
+                if (tracks.length >= maxVisibleTracks) {
                     const warningElement = document.createElement('div');
                     warningElement.style.textAlign = 'center';
                     warningElement.style.padding = '10px';
@@ -2080,14 +2208,27 @@
                     warningElement.style.color = 'var(--warning)';
                     warningElement.style.fontSize = '12px';
                     
-                    const hiddenCount = tracks.length - maxVisibleTracks;
-                    warningElement.innerHTML = `
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Showing first ${maxVisibleTracks} of ${tracks.length} tracks
-                        <div style="font-size: 11px; margin-top: 5px; color: var(--gray);">
-                            ${hiddenCount} tracks hidden for performance. Remove some tracks to see all.
-                        </div>
-                    `;
+                    if (tracks.length > maxVisibleTracks) {
+                        const hiddenCount = tracks.length - maxVisibleTracks;
+                        warningElement.innerHTML = `
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Showing first ${maxVisibleTracks} of ${tracks.length} tracks
+                            <div style="font-size: 11px; margin-top: 5px; color: var(--gray);">
+                                ${hiddenCount} tracks hidden for performance on mobile devices.
+                            </div>
+                            <div style="font-size: 11px; margin-top: 3px; color: var(--gray);">
+                                Maximum limit is 50 tracks for optimal mobile performance.
+                            </div>
+                        `;
+                    } else {
+                        warningElement.innerHTML = `
+                            <i class="fas fa-info-circle"></i>
+                            Playlist at maximum capacity (${tracks.length} tracks)
+                            <div style="font-size: 11px; margin-top: 5px; color: var(--gray);">
+                                Maximum limit is 50 tracks for optimal mobile performance.
+                            </div>
+                        `;
+                    }
                     
                     playlistItems.appendChild(warningElement);
                 }
@@ -2098,6 +2239,11 @@
                 
                 const removedTrack = tracks[index];
                 const wasPlaying = isPlaying && index === currentTrackIndex;
+                
+                // If we're removing the currently loaded track, reset the loaded track ID
+                if (currentlyLoadedTrackId === removedTrack.id) {
+                    currentlyLoadedTrackId = null;
+                }
                 
                 trackFiles.delete(removedTrack.id);
                 filePaths.delete(removedTrack.id);
@@ -2110,6 +2256,7 @@
                         audioPlayer.pause();
                         isPlaying = false;
                         playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                        playBtn.title = "Play";
                         albumArtContainer.classList.remove('playing');
                     }
                     
@@ -2140,6 +2287,7 @@
                     audioPlayer.pause();
                     isPlaying = false;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playBtn.title = "Play";
                     albumArtContainer.classList.remove('playing');
                 }
                 
@@ -2149,6 +2297,7 @@
                 tracks = [];
                 currentTrackIndex = 0;
                 audioPlayer.src = '';
+                currentlyLoadedTrackId = null; // Reset loaded track
                 updateTrackInfo();
                 renderPlaylist();
                 
@@ -2349,6 +2498,14 @@
                             return;
                         }
                         
+                        // Check if import would exceed 50 track limit
+                        if (tracks.length + importData.playlist.length > 50) {
+                            const excess = (tracks.length + importData.playlist.length) - 50;
+                            showToast(`Cannot import ${importData.playlist.length} tracks. Would exceed 50 track limit by ${excess} tracks. Remove some tracks first.`, 'warning');
+                            importInput.value = '';
+                            return;
+                        }
+                        
                         currentImportData = importData;
                         
                         if (importData.version === '4.0' && importData.baseFolder) {
@@ -2379,6 +2536,14 @@
                     return;
                 }
                 
+                // Check if import would exceed 50 track limit
+                if (tracks.length + currentImportData.playlist.length > 50) {
+                    const excess = (tracks.length + currentImportData.playlist.length) - 50;
+                    showToast(`Cannot import ${currentImportData.playlist.length} tracks. Would exceed 50 track limit by ${excess} tracks. Remove some tracks first.`, 'warning');
+                    importModal.classList.remove('active');
+                    return;
+                }
+                
                 let shouldClear = true;
                 if (tracks.length > 0) {
                     shouldClear = confirm('Do you want to clear the current playlist and replace it with the imported one? Click OK to replace, Cancel to merge.');
@@ -2389,6 +2554,7 @@
                     audioPlayer.pause();
                     isPlaying = false;
                     playBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playBtn.title = "Play";
                     albumArtContainer.classList.remove('playing');
                 }
                 
@@ -2485,6 +2651,13 @@
             }
             
             function handleOldPlaylistImport(importData) {
+                // Check if import would exceed 50 track limit
+                if (tracks.length + importData.playlist.length > 50) {
+                    const excess = (tracks.length + importData.playlist.length) - 50;
+                    showToast(`Cannot import ${importData.playlist.length} tracks. Would exceed 50 track limit by ${excess} tracks. Remove some tracks first.`, 'warning');
+                    return;
+                }
+                
                 let shouldClear = true;
                 if (tracks.length > 0) {
                     shouldClear = confirm('Do you want to clear the current playlist and replace it with the imported one? Click OK to replace, Cancel to merge.');
@@ -2575,9 +2748,9 @@
                     const fromIndex = Array.from(playlistItems.children).indexOf(dragSrcElement);
                     const toIndex = Array.from(playlistItems.children).indexOf(this);
                     
-                    const hasCountElement = tracks.length > 100;
-                    const adjustedFromIndex = hasCountElement && fromIndex >= 100 ? fromIndex - 1 : fromIndex;
-                    const adjustedToIndex = hasCountElement && toIndex >= 100 ? toIndex - 1 : toIndex;
+                    const hasWarningElement = tracks.length >= 50;
+                    const adjustedFromIndex = hasWarningElement && fromIndex >= 50 ? fromIndex - 1 : fromIndex;
+                    const adjustedToIndex = hasWarningElement && toIndex >= 50 ? toIndex - 1 : toIndex;
                     
                     if (adjustedFromIndex >= 0 && adjustedToIndex >= 0) {
                         const [movedTrack] = tracks.splice(adjustedFromIndex, 1);
